@@ -1,5 +1,5 @@
 /**
- * Grok / Hermes 风格 Agent 头像引擎公共导出。
+ * Grok 风格 Agent 头像引擎公共导出。
  *
  * - 纯数学与调度层（ring / spring / scheduler / shapes / palettes / effects）零 DOM 依赖，
  *   适合直接嵌入 Web 应用、DeepSeek harness 或转译至 Android Canvas / Flutter。

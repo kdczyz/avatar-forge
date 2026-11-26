@@ -1,6 +1,6 @@
 /**
  * 生成纯粹的 Bot / Agent 角色图库（gallery/*.json）。
- * 清理旧版杂项图形，聚焦 GrokBot / HermesBot / AI Agent 风格形象。
+ * 清理旧版杂项图形，聚焦 GrokBot / AI Agent 风格形象。
  * 全部由参数化图元生成，并由 tests/gallery.test.ts 逐条校验。
  *
  *   node scripts/gen-gallery.mjs
@@ -71,44 +71,11 @@ function ring(cx, cy, rx, ry, thickness, tilt = 0, steps = 56) {
   return poly(outer) + poly(inner.reverse());
 }
 
-function wing(rootX, rootY, dir, span = 1) {
-  const s = span;
-  return blob(
-    [
-      [rootX, rootY],
-      [rootX + dir * 6 * s, rootY + 4 * s],
-      [rootX + dir * 14 * s, rootY - 4 * s],
-      [rootX + dir * 20 * s, rootY - 18 * s],
-      [rootX + dir * 12 * s, rootY - 22 * s],
-      [rootX + dir * 5 * s, rootY - 12 * s],
-      [rootX + dir * 1 * s, rootY - 6 * s],
-    ],
-    0.9,
-  );
-}
-
 const avatars = [];
 const add = (id, name, path, eyes) => avatars.push({ version: 1, id, name, body: { path }, eyes });
 
 // ---------------------------------------------------------------------------
-// 1. Hermes 信使系 Bot
-
-add(
-  'hermes',
-  'Hermes',
-  circle(50, 46, 29) + rrect(16, 49, 68, 9, 4) + wing(28, 40, -1) + wing(72, 40, 1),
-  { x: 50, y: 43, spacing: 16, scale: 1.15 },
-);
-
-add(
-  'scroll',
-  'Scroll',
-  rrect(20, 32, 60, 40, 6) + circle(20, 52, 11) + circle(80, 52, 11) + rrect(36, 70, 28, 10, 5),
-  { x: 50, y: 50, spacing: 15, scale: 1.1 },
-);
-
-// ---------------------------------------------------------------------------
-// 2. Grok / Agent 风格 Bot 家族
+// Grok / Agent 风格 Bot 家族
 
 // Grok Pod：浑圆穹顶头舱 + 稳重悬浮底座
 add(

@@ -3,21 +3,21 @@
  * 没有墙上时钟、没有 Math.random，因此任何一帧都能被精确复现（测试、SSR、拖动进度）。
  *
  * 状态（state）决定“在干什么”：空闲、思考、工作、等待、阻塞、完成。
- * 表情（mood）决定“看起来怎么样”：中性、开心、困倦、惊讶、好奇、不爽、爱心、眨眼。
+ * 表情（mood）决定“看起来怎么样”：中性、开心、困倦、惊讶、好奇、不爽、爱心。
  * 两者正交：`sleepy` 的困倦可以叠在 `working` 的忙碌上。
  */
 import type { AvatarMood, AvatarState, EyeLook, PoseLike, RenderOptions } from './types.ts';
 
 export type { EyeLook } from './types.ts';
 
-const REST_LOOK: EyeLook = { arc: 0, slit: 0, wide: 0, star: 0, tilt: 0, lid: 0, wink: 0, glint: 0.35 };
+const REST_LOOK: EyeLook = { arc: 0, slit: 0, wide: 0, star: 0, tilt: 0, lid: 0, glint: 0.35 };
 
 function look(patch: Partial<EyeLook>): EyeLook {
   return { ...REST_LOOK, ...patch };
 }
 
 /**
- * 每个表情的眼睛配方（16 种）。0.35 的默认高光是“活着”的最低成本：一点反光就够。
+ * 每个表情的眼睛配方（15 种）。0.35 的默认高光是“活着”的最低成本：一点反光就够。
  */
 const MOOD_LOOK: Record<AvatarMood, EyeLook> = {
   neutral: look({}),
@@ -27,7 +27,6 @@ const MOOD_LOOK: Record<AvatarMood, EyeLook> = {
   surprised: look({ wide: 1, glint: 0.9 }),
   curious: look({ wide: 0.35, tilt: 0.4, glint: 0.6 }),
   skeptical: look({ lid: 0.32, tilt: 0.22, glint: 0.4 }),
-  wink: look({ arc: 1, wink: 1, glint: 0.6 }),
   sleepy: look({ lid: 0.55, glint: 0.12 }),
   bored: look({ lid: 0.36, slit: 0.25, glint: 0.15 }),
   sad: look({ lid: 0.3, tilt: 0.5, glint: 0.2 }),
@@ -53,7 +52,6 @@ export const MOODS: readonly AvatarMood[] = [
   'surprised',
   'curious',
   'skeptical',
-  'wink',
   'sleepy',
   'bored',
   'sad',
@@ -209,7 +207,6 @@ export function blendPoses(a: Pose, b: Pose, t: number): Pose {
     blink: m(a.blink, b.blink),
     squintL: m(a.squintL, b.squintL),
     squintR: m(a.squintR, b.squintR),
-    winkL: m(a.winkL, b.winkL),
     eyes: {
       arc: m(a.eyes.arc, b.eyes.arc),
       slit: m(a.eyes.slit, b.eyes.slit),
@@ -217,7 +214,6 @@ export function blendPoses(a: Pose, b: Pose, t: number): Pose {
       star: m(a.eyes.star, b.eyes.star),
       tilt: m(a.eyes.tilt, b.eyes.tilt),
       lid: m(a.eyes.lid, b.eyes.lid),
-      wink: m(a.eyes.wink, b.eyes.wink),
       glint: m(a.eyes.glint, b.eyes.glint),
     },
     ribbons: m(a.ribbons, b.ribbons),
@@ -292,7 +288,6 @@ const MOOD_BODY: Record<AvatarMood, MoodBody> = {
   surprised: { pace: 1.5, gazeBias: [0, 0], roll: 0, blink: { slot: 2.4, dur: 0.13 } },
   curious: { pace: 1.05, gazeBias: [0.18, -0.1], roll: 5, blink: { slot: 3.2 } },
   skeptical: { pace: 0.95, gazeBias: [0.2, -0.05], roll: 3.5, blink: { slot: 4.8 } },
-  wink: { pace: 1.1, gazeBias: [0.1, 0], roll: 2, blink: { slot: 4.6 } },
   sleepy: { pace: 0.55, gazeBias: [-0.05, 0.35], roll: -3, blink: { slot: 7.4, dur: 0.46, double: 1.4 } },
   bored: { pace: 0.72, gazeBias: [0.22, 0.15], roll: -4, blink: { slot: 6.0, dur: 0.3 } },
   sad: { pace: 0.78, gazeBias: [0, 0.38], roll: -4.5, blink: { slot: 5.5, dur: 0.28 } },
@@ -317,7 +312,6 @@ function mixLook(a: EyeLook, b: EyeLook, k: number): EyeLook {
     star: m(a.star, b.star),
     tilt: m(a.tilt, b.tilt),
     lid: m(a.lid, b.lid),
-    wink: m(a.wink, b.wink),
     glint: m(a.glint, b.glint),
   };
 }
@@ -354,7 +348,6 @@ export function computePose(input: PoseInput): Pose {
     blink: 0,
     squintL: 0,
     squintR: 0,
-    winkL: 0,
     eyes,
     ribbons: 0,
     cage: 0,
@@ -553,7 +546,6 @@ export function computePose(input: PoseInput): Pose {
   }
 
   // 眨眼关掉高光：闭上的眼睛不该有反光。
-  pose.winkL = pose.eyes.wink;
   if (pose.blink > 0.55) pose.eyes.glint *= clamp((1 - pose.blink) / 0.45, 0, 1);
 
   if (given && weight > 0) {

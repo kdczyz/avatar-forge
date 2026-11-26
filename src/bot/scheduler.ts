@@ -21,7 +21,7 @@ export interface StateCadence {
 
 export const STATE_CADENCES: Record<AvatarState, StateCadence> = {
   idle: {
-    pool: ['neutral', 'happy', 'curious', 'wink', 'shy', 'sleepy'],
+    pool: ['neutral', 'happy', 'curious', 'shy', 'sleepy'],
     moodInterval: [3.2, 6.8],
     blinkInterval: [2.2, 3.8],
     blinkDuration: 0.15,
@@ -51,7 +51,7 @@ export const STATE_CADENCES: Record<AvatarState, StateCadence> = {
     blinkDuration: 0.15,
   },
   done: {
-    pool: ['joy', 'love', 'happy', 'wink'],
+    pool: ['joy', 'love', 'happy'],
     moodInterval: [2.0, 4.2],
     blinkInterval: [2.0, 3.4],
     blinkDuration: 0.14,
@@ -64,7 +64,7 @@ export const STATE_CADENCES: Record<AvatarState, StateCadence> = {
   },
 };
 
-const POKE_POOL: readonly AvatarMood[] = ['surprised', 'love', 'shy', 'curious', 'wink', 'joy', 'angry'];
+const POKE_POOL: readonly AvatarMood[] = ['surprised', 'love', 'shy', 'curious', 'joy', 'angry'];
 
 export interface SchedulerOptions {
   state?: AvatarState;

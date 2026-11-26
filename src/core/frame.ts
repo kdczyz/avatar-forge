@@ -255,7 +255,7 @@ interface EyeState {
   dy: number;
   open: number;
   shift: number;
-  /** 这只眼睛完全闭着（眨眼到顶，或表情里的 wink 只闭左眼）。 */
+  /** 这只眼睛完全闭着（眨眼到顶）。 */
   closed: boolean;
   plain: 'pill' | 'arc' | null;
   look: Pose['eyes'];
@@ -276,7 +276,7 @@ function eyeStates(p: Prepared, pose: Pose): [EyeState, EyeState] {
     // 上眼皮下垂（困）与眯眼一起压高度；闭眼另走闭眼线，不靠“压成一条”硬凑。
     const lid = Math.max(0, Math.min(1, pose.eyes.lid * 0.82 + squint * 0.4));
     const openness = (1 - pose.blink) * (1 - lid);
-    const closed = pose.blink > 0.92 || (i === 0 && pose.winkL > 0.6);
+    const closed = pose.blink > 0.92;
     const open = Math.max(h * Math.max(0.09, openness), w * 0.55);
     return {
       x: centers[i][0],

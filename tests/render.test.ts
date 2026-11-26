@@ -161,7 +161,7 @@ describe('projection', () => {
 });
 
 describe('expression', () => {
-  const moods = ['neutral', 'happy', 'sleepy', 'surprised', 'curious', 'angry', 'love', 'wink'] as const;
+  const moods = ['neutral', 'happy', 'sleepy', 'surprised', 'curious', 'angry', 'love'] as const;
 
   it('gives every mood its own eyes', () => {
     const seen = new Map<string, number>();
@@ -173,7 +173,7 @@ describe('expression', () => {
       expect(pose.eyes.wide).toBeGreaterThanOrEqual(0);
       expect(Math.abs(pose.eyes.tilt)).toBeLessThanOrEqual(1);
     }
-    // 八个表情至少给出六种不同的眼睛配方。
+    // 七个表情至少给出六种不同的眼睛配方。
     expect(seen.size).toBeGreaterThanOrEqual(6);
   });
 
@@ -188,22 +188,19 @@ describe('expression', () => {
     expect(half.eyes.wide).toBeLessThan(0.6);
   });
 
-  it('closes one eye for a wink and keeps both for a smile', () => {
-    const wink = computeFrame(def, { mood: 'wink', time: 0.4, reducedMotion: true });
-    const eyes = wink.shapes.filter((s) => s.kind === 'eye');
-    expect(eyes.length).toBe(2);
-    const shapes = eyes.map((e) => (e.kind === 'eye' ? e.mark.shape : ''));
-    expect(shapes).toContain('path');
+  it('draws both eyes as smile arcs for a smile', () => {
     const happy = computeFrame(def, { mood: 'happy', time: 0.4, reducedMotion: true });
-    for (const e of happy.shapes) if (e.kind === 'eye') expect(e.mark.shape).toBe('arc');
+    const eyes = happy.shapes.filter((s) => s.kind === 'eye');
+    expect(eyes.length).toBe(2);
+    for (const e of eyes) expect(e.kind === 'eye' ? e.mark.shape : '').toBe('arc');
   });
 
   it('draws clean eyes without catchlight dots', () => {
     const glints = (f: Frame) => f.shapes.filter((s) => s.kind === 'mark' && s.key.startsWith('glint')).length;
     const open = computeFrame(def, { mood: 'surprised', time: 0.3, reducedMotion: true });
     expect(glints(open)).toBe(0);
-    const wink = computeFrame(def, { mood: 'wink', time: 0.3, reducedMotion: true });
-    expect(glints(wink)).toBe(0);
+    const sleepy = computeFrame(def, { mood: 'sleepy', time: 0.3, reducedMotion: true });
+    expect(glints(sleepy)).toBe(0);
   });
 
   it('flicks through micro expressions while idle and stays calm when reduced', () => {

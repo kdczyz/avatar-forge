@@ -30,7 +30,6 @@ const MOOD_LABELS: Record<AvatarMood, string> = {
   surprised: '惊讶',
   curious: '好奇',
   skeptical: '怀疑',
-  wink: '眨眼',
   sleepy: '困倦',
   bored: '无聊',
   sad: '难过',
@@ -138,7 +137,6 @@ bot.wrapper.style.cursor = 'grab';
 // ---------------------------------------------------------------------------
 // 躯干与图库
 
-const shapesEl = must<HTMLElement>('#shapes');
 const galleryEl = must<HTMLElement>('#gallery');
 const thumbSvg = new Map<string, string>();
 
@@ -165,16 +163,13 @@ function renderThumbList(container: HTMLElement, items: AvatarDefinition[]): voi
 }
 
 function buildGallery(): void {
-  renderThumbList(
-    shapesEl,
-    SHAPES.map((s) => s.definition),
-  );
-  renderThumbList(galleryEl, [...GALLERY, ...yours]);
+  // 基础躯干与 Bot 角色合并到同一个库：躯干在前，角色在后。
+  renderThumbList(galleryEl, [...SHAPES.map((s) => s.definition), ...GALLERY, ...yours]);
   markCurrent();
 }
 
 function markCurrent(): void {
-  for (const button of document.querySelectorAll<HTMLButtonElement>('#shapes button, #gallery button')) {
+  for (const button of document.querySelectorAll<HTMLButtonElement>('#gallery button')) {
     button.setAttribute('aria-current', button.dataset.id === current.id ? 'true' : 'false');
   }
 }

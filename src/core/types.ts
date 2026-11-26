@@ -28,7 +28,7 @@ export interface AvatarDefinition {
 
 export type AvatarState = 'idle' | 'thinking' | 'working' | 'waiting' | 'blocked' | 'done' | 'alert';
 /**
- * 表情（16 种）。它只改“脸”（眼睛形状、开合、闪烁、高光），以及一点点身体倾向；
+ * 表情（15 种）。它只改“脸”（眼睛形状、开合、闪烁、高光），以及一点点身体倾向；
  * 状态决定“在干什么”，表情决定“看起来怎么样”。两者可以任意组合。
  */
 export type AvatarMood =
@@ -39,7 +39,6 @@ export type AvatarMood =
   | 'surprised'
   | 'curious'
   | 'skeptical'
-  | 'wink'
   | 'sleepy'
   | 'bored'
   | 'sad'
@@ -117,8 +116,6 @@ export interface EyeLook {
   tilt: number;
   /** 0..1，上眼皮下垂。 */
   lid: number;
-  /** 0..1，左眼闭合程度。 */
-  wink: number;
   /** 0..1，高光。 */
   glint: number;
 }
@@ -139,7 +136,6 @@ export interface PoseLike {
   blink: number;
   squintL: number;
   squintR: number;
-  winkL: number;
   eyes: EyeLook;
   ribbons: number;
   cage: number;

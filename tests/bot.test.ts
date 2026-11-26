@@ -11,8 +11,8 @@ import { placement, remountCanvas, type Surface } from '../src/core/paint.ts';
 import { renderSvg } from '../src/core/svg.ts';
 
 describe('48-point eye rings', () => {
-  it('provides 16 expressions with 48 clockwise points anchored at 3 o clock', () => {
-    expect(EXPRESSIONS.length).toBe(16);
+  it('provides 15 expressions with 48 clockwise points anchored at 3 o clock', () => {
+    expect(EXPRESSIONS.length).toBe(15);
     for (const mood of EXPRESSIONS) {
       const [left, right] = expressionRings(mood);
       expect(left.length).toBe(POINT_COUNT);

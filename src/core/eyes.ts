@@ -19,7 +19,7 @@ export interface EyeSpot {
   /** 眨眼/眯眼之后的药丸高度，以及它向下移动的距离。 */
   open: number;
   shift: number;
-  /** 这只眼睛完全闭着（眨眼到顶或表情里的 wink）。 */
+  /** 这只眼睛完全闭着（眨眼到顶）。 */
   closed?: boolean;
 }
 

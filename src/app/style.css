@@ -190,11 +190,6 @@ body {
   padding-right: 2px;
 }
 
-.gallery-compact {
-  max-height: none;
-  overflow: visible;
-}
-
 .embed-code {
   margin: 0 0 10px;
   padding: 8px 10px;

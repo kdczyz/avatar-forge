@@ -135,7 +135,7 @@ const pair = (left: RingParams, right?: RingParams): EyePair => [
   right ? mirrorRing(createEyeRing(right)) : mirrorRing(createEyeRing(left)),
 ];
 
-/** 16 种表情。所有参数写的是“左眼”，x 正方向 = 朝鼻梁的内角。 */
+/** 15 种表情。所有参数写的是“左眼”，x 正方向 = 朝鼻梁的内角。 */
 const LIBRARY: Record<AvatarMood, EyePair> = {
   neutral: pair({ rx: 2.1, ry: 5.4 }),
   happy: pair({ rx: 2.9, ry: 1.5, bend: 2.6, dy: -0.6 }),
@@ -144,7 +144,6 @@ const LIBRARY: Record<AvatarMood, EyePair> = {
   surprised: pair({ rx: 2.9, ry: 5.8, n: 2.15 }),
   curious: pair({ rx: 2.4, ry: 5.8, n: 2.3 }, { rx: 2.0, ry: 4.6, squintTop: 0.25, dy: 0.5 }),
   skeptical: pair({ rx: 2.2, ry: 5.2 }, { rx: 2.4, ry: 5.2, lid: { y: -0.9, slope: 0.15 } }),
-  wink: [createEyeRing({ rx: 2.9, ry: 0.75, bend: 1.9, dy: 0.4 }), mirrorRing(createEyeRing({ rx: 2.9, ry: 1.5, bend: 2.6, dy: -0.6 }))],
   sleepy: pair({ rx: 2.6, ry: 5.2, lid: { y: 1.6 } }),
   bored: pair({ rx: 2.5, ry: 5.2, lid: { y: -0.5 }, squintBottom: 0.15 }),
   sad: pair({ rx: 2.3, ry: 5.0, lid: { y: -1.6, slope: -0.75 }, dy: 0.6 }),
