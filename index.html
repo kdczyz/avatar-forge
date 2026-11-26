@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Avatar Forge — Grok/Hermes 风格 Agent 头像引擎与工作台</title>
+    <meta name="description" content="伪 3D 黏土质感 + 48 点眼环弹簧插值 + 双节奏状态机 + 原生 Web Component，支持嵌入 Agent App / DeepSeek harness / Android。" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23ff6a1a'/%3E%3Crect x='34' y='30' width='9' height='26' rx='4.5' fill='%23151515'/%3E%3Crect x='57' y='30' width='9' height='26' rx='4.5' fill='%23151515'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="26" fill="currentColor"/><rect x="34" y="30" width="9" height="26" rx="4.5" fill="#151515"/><rect x="57" y="30" width="9" height="26" rx="4.5" fill="#151515"/></svg>
+          </span>
+          <div>
+            <h1>Avatar Forge</h1>
+            <p>黏土体积躯干 + 48 点眼环弹簧 + 双节奏状态机</p>
+          </div>
+        </div>
+        <nav class="top-actions">
+          <button id="copy-embed" class="btn" type="button">复制组件标签</button>
+          <button id="copy-prompt" class="btn" type="button">复制设计提示词</button>
+          <button id="download-svg" class="btn" type="button">导出 SVG</button>
+          <button id="download-png" class="btn btn-primary" type="button">导出 PNG</button>
+        </nav>
+      </header>
+
+      <main class="layout">
+        <section class="stage-card" aria-label="头像舞台">
+          <div class="stage" id="stage"></div>
+          <div class="stage-bar">
+            <div class="stage-meta">
+              <strong id="avatar-name">Circle</strong>
+              <span id="avatar-id" class="mono">shape-circle</span>
+              <span id="runtime-mood" class="badge-pill mono">auto: neutral</span>
+            </div>
+            <div class="segmented" id="state-pills" role="radiogroup" aria-label="状态"></div>
+            <div class="segmented segmented-moods" id="mood-pills" role="radiogroup" aria-label="表情"></div>
+            <div class="mood-row">
+              <button id="poke" class="btn btn-ghost" type="button" title="给它一个瞬时弹簧反应">逗它一下</button>
+              <div class="segmented segmented-mini" id="badge-pills" role="radiogroup" aria-label="通知角标"></div>
+              <label class="switch">
+                <input type="checkbox" id="clay" checked />
+                <span>黏土质感</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="orbit" />
+                <span>轨道粒子</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="follow" checked />
+                <span>跟随光标</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="sleep-idle" />
+                <span>Idle 休眠降帧</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="reduce" />
+                <span>减少动效</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <section class="card">
+            <h2>8 种基础躯干</h2>
+            <div class="gallery gallery-compact" id="shapes"></div>
+            <h2 class="subhead">角色图库</h2>
+            <div class="gallery" id="gallery"></div>
+          </section>
+
+          <section class="card">
+            <h2>12 套主题色板与体积</h2>
+            <div class="swatches" id="swatches"></div>
+            <label class="field">
+              <span>自定义主色（自动派生高光与阴影）</span>
+              <input type="color" id="color" value="#ff6a1a" />
+            </label>
+            <label class="field">
+              <span>体积深度 <output id="depth-out">6</output></span>
+              <input type="range" id="depth" min="0" max="14" step="0.5" value="6" />
+            </label>
+            <label class="field">
+              <span>尺寸 <output id="size-out">320</output> px</span>
+              <input type="range" id="size" min="96" max="480" step="8" value="320" />
+            </label>
+          </section>
+
+          <section class="card">
+            <h2>嵌入与导入</h2>
+            <p class="hint">可直接使用 <code>&lt;grok-bot&gt;</code> 组件标签，或粘贴 JSON 定义导入“你的头像”。</p>
+            <pre id="embed-preview" class="embed-code mono"></pre>
+            <textarea id="import" rows="5" spellcheck="false" placeholder='{"version":1,"id":"box","name":"Box","body":{"path":"M20 20H80V80H20Z"},"eyes":{"x":50,"y":46,"spacing":15,"scale":1}}'></textarea>
+            <div class="row">
+              <button id="import-add" class="btn btn-primary" type="button">校验并加入</button>
+              <button id="import-export" class="btn" type="button">导出当前定义</button>
+            </div>
+            <ul id="import-errors" class="errors" aria-live="polite"></ul>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>混合架构：体积切片 + 黏土光影 + 48 点眼环弹簧三缓冲 + 双节奏状态机。MIT。</span>
+        <span class="mono" id="fps">— fps</span>
+      </footer>
+    </div>
+    <script type="module" src="/src/app/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "avatar-forge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "一个 JSON 规范 + 渲染器的交互式 agent 头像项目（open-bot-avatar 的独立复刻实现）",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.6.3",
+    "vite": "^7.3.8",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "id": "orb",
+  "name": "Orb",
+  "body": {
+    "path": "M12 50A38 38 0 1 1 88 50A38 38 0 1 1 12 50Z"
+  },
+  "eyes": {
+    "x": 50,
+    "y": 46,
+    "spacing": 17,
+    "scale": 1.3
+  }
+}
