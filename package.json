@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "一个 JSON 规范 + 渲染器的交互式 agent 头像项目（open-bot-avatar 的独立复刻实现）",
+  "description": "Grok 风格 Agent 头像引擎与工作台：伪 3D 黏土体积 + 48 点眼环弹簧 + 双节奏状态机 + 原生 Web Component，零依赖可嵌入。",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

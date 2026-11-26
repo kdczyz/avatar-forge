@@ -1,20 +1,14 @@
 # Avatar Forge
 
-一个 JSON 规范 + 渲染器的交互式 agent 头像工作台：**一条 SVG 路径 + 两只眼睛**，
-颜色、体积、视角、凝视、眨眼和动效全部由运行时推断。
-
-本项目是对 [DominikScholz/open-bot-avatar](https://github.com/DominikScholz/open-bot-avatar)
-的**独立复刻实现**：同一条契约、同一类推断式体积与截面投影算法，代码是新写的，单包、无框架、
-可测试、可导出。逆向拆解过程与结论见 [ANALYSIS.md](ANALYSIS.md)。
-
-![stage](docs/stage.png)
+一个 Grok 风格的 Agent 头像引擎与工作台：**伪 3D 黏土体积 + 48 点眼环弹簧插值 +
+双节奏状态机**，渲染全程零框架、零依赖，可直接作为原生 Web Component `<grok-bot>` 嵌入宿主。
 
 ## 快速开始
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # 29 个几何/校验/投影/帧用例
+npm test           # 45 个几何/校验/投影/帧/引擎用例
 npm run build      # tsc --noEmit && vite build
 ```
 
@@ -89,35 +83,44 @@ Cloudflare Named Tunnel（自己的域名）或 `tailscale funnel`。本地开�
 ## 代码地图
 
 ```
-src/core/
-  types.ts      契约与渲染选项
-  path.ts       受限路径解析 / 展平 / nonzero 绕数 / 边表
-  field.ts      最近边距离、marching squares、RDP、环 → 路径
-  volume.ts     体积推断、双叠截面、细部细分、眼窝与眼平面
-  validate.ts   校验、孔洞判定、眼睛净空与凝视行程
-  pose.ts       确定性姿态与状态节拍
-  eyes.ts       药丸/开心弧/细缝的逐点形变
-  frame.ts      视图矩阵、帧装配与深度排序、彩带配色
-  fx.ts         彩带几何、感叹号与三圆点
-  paint.ts      canvas 渲染（位图 fit + Path2D 缓存）
-  svg.ts        静帧导出
-src/app/        工作台 UI（原生 DOM）
-gallery/        10 个自研头像定义（由 scripts/gen-gallery.mjs 生成）
-tests/          几何、校验、投影、帧、图库用例
+src/bot/         Grok 风格头像引擎（当前主线）
+  ring.ts         48 点眼环几何（基础形状与采样）
+  spring.ts       弹簧插值（眼环逐点形变）
+  scheduler.ts    双节奏状态机（状态节拍调度）
+  shapes.ts       9 种基础躯干形状定义
+  palettes.ts     12 套调色板
+  effects.ts      彩带 / 粒子等效果几何
+  clay.ts         伪 3D 黏土体积着色
+  grok-bot.ts     GrokBot 控制器 + 原生 <grok-bot> Web Component
+  index.ts        引擎公共导出（统一入口）
+src/core/        渲染核心（JSON 契约 → 帧 → SVG/canvas）
+  types.ts        契约与渲染选项
+  path.ts         受限路径解析 / 展平 / nonzero 绕数 / 边表
+  field.ts        最近边距离、marching squares、RDP、环 → 路径
+  volume.ts       体积推断、双叠截面、细部细分、眼窝与眼平面
+  validate.ts     校验、孔洞判定、眼睛净空与凝视行程
+  pose.ts         确定性姿态与状态节拍
+  eyes.ts         药丸/开心弧/细缝的逐点形变
+  frame.ts        视图矩阵、帧装配与深度排序、彩带配色
+  fx.ts           彩带几何、感叹号与三圆点
+  paint.ts        canvas 渲染（位图 fit + Path2D 缓存）
+  svg.ts          静帧导出
+src/app/         工作台 UI（原生 DOM）
+gallery/         10 个自研头像定义（由 scripts/gen-gallery.mjs 生成）
+tests/           几何、校验、投影、帧、图库、引擎用例
 ```
 
-## 与上游的差异
+## 接口文档
 
-| 上游 | 本项目 |
-| --- | --- |
-| pnpm monorepo（core + React 站点） | 单包、原生 TS/DOM |
-| 自带距离分桶索引（EdgeIndex/EdgeBands 分带） | 一遍算术的简单实现，结果相同、常数更大，靠缓存摊销 |
-| CSS 3D `scene` 后端 + WebGL 绒毛材质 | 未复刻；canvas + SVG 两种后端 |
-| 彩带由 3D 中线、切向与端帽构造 | 屏幕空间法线扩宽 + 可见性分段，视觉近似 |
-| 状态切换在渲染器内做 `motionBlend` | UI 侧 420ms 参数插值 |
+当前版本的完整公开接口按模块整理在：
 
-没有复制上游素材：`gallery/*.json` 全部由 `scripts/gen-gallery.mjs` 用图元（圆、椭圆、圆角矩形、
-多边形、星形、Catmull-Rom 平滑 blob、环带）现场拼出来，并由测试逐条校验。
+- [INTERFACES-bot.md](INTERFACES-bot.md) — `src/bot/` 引擎：眼环、弹簧、状态机、形状、调色板、效果、黏土着色、Web Component
+- [INTERFACES-core.md](INTERFACES-core.md) — `src/core/` 渲染核心与 `src/app/` 工作台入口
+
+## 形象库
+
+`gallery/*.json` 全部由 `scripts/gen-gallery.mjs` 用图元（圆、椭圆、圆角矩形、多边形、
+星形、Catmull-Rom 平滑 blob、环带）现场拼出来，并由测试逐条校验。
 10 个形象分两组：机舱线（`grok-pod` / `relay` / `mecha` / `droid` / `orbiter`）、
 伙伴线（`neko` / `spark` / `guardian` / `ghost`（Phantom）/ `mochi`）。
 
