@@ -8,7 +8,7 @@
 import type { AvatarDefinition } from '../core/types.ts';
 import type { Pt } from './ring.ts';
 
-export type ShapeId = 'circle' | 'squircle' | 'hexagon' | 'cloud' | 'capsule' | 'droplet' | 'star' | 'blob';
+export type ShapeId = 'circle' | 'sphere' | 'squircle' | 'hexagon' | 'cloud' | 'capsule' | 'droplet' | 'star' | 'blob';
 
 export interface CanonicalShape {
   id: ShapeId;
@@ -162,7 +162,7 @@ const blobControlPts: Pt[] = [
 export const SHAPES: readonly CanonicalShape[] = [
   {
     id: 'circle',
-    name: '圆球 Circle',
+    name: '圆盘 Circle',
     unitPoints: circlePts,
     definition: {
       version: 1,
@@ -170,6 +170,18 @@ export const SHAPES: readonly CanonicalShape[] = [
       name: 'Circle',
       body: { path: 'M11 50A39 39 0 1 1 89 50A39 39 0 1 1 11 50Z' },
       eyes: { x: 50, y: 48, spacing: 18, scale: 1.15 },
+    },
+  },
+  {
+    id: 'sphere',
+    name: '球形 Sphere',
+    unitPoints: circlePts,
+    definition: {
+      version: 1,
+      id: 'shape-sphere',
+      name: 'Sphere',
+      body: { path: 'M11 50A39 39 0 1 1 89 50A39 39 0 1 1 11 50Z' },
+      eyes: { x: 50, y: 48, spacing: 18, scale: 1.12 },
     },
   },
   {

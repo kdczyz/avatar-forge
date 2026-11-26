@@ -267,7 +267,7 @@ function circlePath(r: number): string {
 
 /**
  * 一条“粗线”：沿折线两侧按宽度偏移出轮廓，用于触须、蛇身、飘带这类
- * 需要厚度又不想手写贝塞尔的部件（Hermes 系列的双蛇杖就用它）。
+ * 需要厚度又不想手写贝塞尔的部件（触须、蛇身、飘带之类）。
  */
 export function tube(points: Point[], width: number, closed = false): string {
   const pts = closed ? [...points, points[0]] : points;

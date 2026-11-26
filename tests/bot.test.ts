@@ -5,6 +5,7 @@ import { BotScheduler } from '../src/bot/scheduler.ts';
 import { SHAPES } from '../src/bot/shapes.ts';
 import { PALETTES, derivePalette } from '../src/bot/palettes.ts';
 import { validateAvatar } from '../src/core/validate.ts';
+import { buildVolume } from '../src/core/volume.ts';
 import { computeFrame } from '../src/core/frame.ts';
 import { placement, remountCanvas, type Surface } from '../src/core/paint.ts';
 import { renderSvg } from '../src/core/svg.ts';
@@ -94,10 +95,16 @@ describe('BotScheduler', () => {
   });
 });
 
-describe('8 canonical shapes & 12 palettes', () => {
-  it('validates all 8 shapes and renders clay SVG frames', () => {
-    expect(SHAPES.length).toBe(8);
+describe('9 canonical shapes & 12 palettes', () => {
+  it('validates all 9 shapes including true 3D sphere and renders clay SVG frames', () => {
+    expect(SHAPES.length).toBe(9);
     expect(PALETTES.length).toBe(12);
+    const sphereShape = SHAPES.find((s) => s.id === 'sphere');
+    expect(sphereShape).toBeDefined();
+    const sphereVol = buildVolume(sphereShape!.definition, 1);
+    expect(sphereVol.parts[0].kind).toBe('revolve-y');
+    expect(sphereVol.parts[0].depth).toBeGreaterThan(70);
+
     for (let i = 0; i < SHAPES.length; i++) {
       const shape = SHAPES[i];
       expect(shape.unitPoints.length).toBeGreaterThanOrEqual(6);

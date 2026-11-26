@@ -7,7 +7,7 @@
  */
 import { oklch, parseHex, toHex, toOklch, type Rgb } from './color.ts';
 import { bloomPieces, bodyScale, markParts, ribbonPieces, rimOf, type Box, type Rim } from './fx.ts';
-import { eyePath, glintPath, plainLook, type EyeSpot } from './eyes.ts';
+import { eyePath, plainLook, type EyeSpot } from './eyes.ts';
 import { blendPoses, hashString, computePose, type Pose } from './pose.ts';
 import type { PoseLike } from './types.ts';
 import type { Bounds, Point } from './path.ts';
@@ -503,18 +503,6 @@ export function computeFrame(definition: AvatarDefinition, options: RenderOption
           depth: depth + 1e-6,
           shape: { kind: 'eye', key: idx === 0 ? 'eye-0' : 'eye-1', matrix: eyeMatrixNow, mark: { shape: 'path', d } },
         });
-        const noGlint = blinkScale <= 0.45 || blended.eyes.arc >= 0.8 || blended.eyes.star >= 0.8 || (idx === 0 && blended.winkL > 0.6);
-        const glint = noGlint
-          ? null
-          : glintPath({ x: cx + dx, y: cy + dy, w: EYE_W * s, h: EYE_H * s, open: EYE_H * s * blinkScale, shift: 0 }, blended.eyes.glint);
-        if (glint) {
-          const id = `${p.id}-glint-${idx}`;
-          pathFor(glint.d, false, { x: glint.x - glint.r, y: glint.y - glint.r, w: 2 * glint.r, h: 2 * glint.r }, id);
-          items.push({
-            depth: depth + 2e-6,
-            shape: { kind: 'mark', key: `glint-${idx}`, id, d: glint.d, box: { x: glint.x - glint.r, y: glint.y - glint.r, w: 2 * glint.r, h: 2 * glint.r }, matrix: eyeMatrixNow },
-          });
-        }
       });
     } else {
       eyeStates(p, blended).forEach((e, idx) => {
@@ -533,17 +521,6 @@ export function computeFrame(definition: AvatarDefinition, options: RenderOption
           depth: depth + 1e-6,
           shape: { kind: 'eye', key: idx === 0 ? 'eye-0' : 'eye-1', matrix: eyeMatrixNow, mark },
         });
-        // 高光贴着同一张切平面，紧跟在眼球之后画（深度略大一点）。
-        // 笑眼弧是一笔画出来的眼形，没有眼球，也就没有高光。
-        const glint = e.closed || mark.shape === 'arc' ? null : glintPath({ ...spotOf(e, true), open: e.open }, e.glint);
-        if (glint) {
-          const id = `${p.id}-glint-${idx}`;
-          pathFor(glint.d, false, { x: glint.x - glint.r, y: glint.y - glint.r, w: 2 * glint.r, h: 2 * glint.r }, id);
-          items.push({
-            depth: depth + 2e-6,
-            shape: { kind: 'mark', key: `glint-${idx}`, id, d: glint.d, box: { x: glint.x - glint.r, y: glint.y - glint.r, w: 2 * glint.r, h: 2 * glint.r }, matrix: eyeMatrixNow },
-          });
-        }
       });
     }
     items.sort((m, n) => m.depth - n.depth);

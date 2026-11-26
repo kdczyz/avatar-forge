@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { computeFrame, activeStack, viewBasis, prepare, planeMatrix, sidePlaneMatrix, type Frame } from '../src/core/frame.ts';
-import { glintPath } from '../src/core/eyes.ts';
 import { edgeDistance } from '../src/core/field.ts';
 import { winding } from '../src/core/path.ts';
 import { renderSvg } from '../src/core/svg.ts';
@@ -199,16 +198,12 @@ describe('expression', () => {
     for (const e of happy.shapes) if (e.kind === 'eye') expect(e.mark.shape).toBe('arc');
   });
 
-  it('paints a catchlight, and only on eyes that are open', () => {
+  it('draws clean eyes without catchlight dots', () => {
     const glints = (f: Frame) => f.shapes.filter((s) => s.kind === 'mark' && s.key.startsWith('glint')).length;
     const open = computeFrame(def, { mood: 'surprised', time: 0.3, reducedMotion: true });
-    expect(glints(open)).toBe(2);
-    // wink：左眼是一条闭眼线，右眼是笑眼弧，两者都没有“眼球”，也就都没有高光。
+    expect(glints(open)).toBe(0);
     const wink = computeFrame(def, { mood: 'wink', time: 0.3, reducedMotion: true });
     expect(glints(wink)).toBe(0);
-    // 半闭的眼睛（困）高光会缩到几乎没有，闭眼线本身不该有反光。
-    const closedEyes = glintPath({ x: 50, y: 50, w: 6, h: 18, open: 1.2, shift: 0, closed: true }, 1);
-    expect(closedEyes === null || closedEyes.r < 0.4).toBe(true);
   });
 
   it('flicks through micro expressions while idle and stays calm when reduced', () => {

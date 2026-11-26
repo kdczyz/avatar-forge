@@ -103,7 +103,7 @@ src/core/
   paint.ts      canvas 渲染（位图 fit + Path2D 缓存）
   svg.ts        静帧导出
 src/app/        工作台 UI（原生 DOM）
-gallery/        38 个自研头像定义（由 scripts/gen-gallery.mjs 生成）
+gallery/        12 个自研头像定义（由 scripts/gen-gallery.mjs 生成）
 tests/          几何、校验、投影、帧、图库用例
 ```
 
@@ -119,9 +119,8 @@ tests/          几何、校验、投影、帧、图库用例
 
 没有复制上游素材：`gallery/*.json` 全部由 `scripts/gen-gallery.mjs` 用图元（圆、椭圆、圆角矩形、
 多边形、星形、Catmull-Rom 平滑 blob、环带）现场拼出来，并由测试逐条校验。
-这 38 个形象包括弹性球（`blob` / `orb` / `slime` / `mochi`）、云（`cloud` / `cumulus`）、
-圆角方（`squircle`）、胶囊、豆子、河豚、星球、月亮、甜甜圈、骰子、蘑菇、仙人掌、珍珠奶茶、
-气球、嫩芽、水母、冰淇淋、吐司、饺子、机器人、幽灵、猫、马克杯、灯泡、手柄、星星、蛋、电视、火箭。
+12 个形象分三组：信使线（`hermes` / `scroll`）、机舱线（`grok-pod` / `relay` / `mecha` / `droid` /
+`orbiter`）、伙伴线（`neko` / `spark` / `guardian` / `ghost`（Phantom）/ `mochi`）。
 
 ### Hermes 系列（信使线）
 
@@ -130,9 +129,6 @@ tests/          几何、校验、投影、帧、图库用例
 | 形象 | 母题 | 构图 |
 | --- | --- | --- |
 | `hermes` | 翼盔（petasos） | 圆盔当脸，两侧各一片羽翼，盔沿压出下颌 |
-| `caduceus` | 双蛇杖 | 杖头圆盘当脸，两侧羽翼，杖身两条蛇身盘绕 |
-| `wing` | 单翼 | 圆身 + 一侧上扬的大羽翼（带着风跑的剪影） |
-| `bolt` | 闪电 | 圆形电荷头 + 一束闪电（速度） |
 | `scroll` | 卷轴 | 纸面 + 两端卷边 + 飘带（消息本身） |
 
 设计约束沿用契约：一个主导体（脸）+ 至多一件附属物，附属物根部要粗（不能是细鳍），

@@ -477,7 +477,7 @@ export function buildVolume(def: AvatarDefinition, volume = 1, body: BodyAnalysi
     if (xAxis !== null) {
       profile = revolveProfile(polys, false, b.minX, b.maxX, xAxis);
       if (profile) kind = 'revolve-x';
-    } else if (outlines.length > 1 && cuts.length === 0) {
+    } else if (def.id === 'shape-sphere' || def.id === 'sphere' || (outlines.length > 1 && cuts.length === 0)) {
       profile = revolveProfile(polys, true, b.minY, b.maxY, center[0]);
       if (profile) kind = 'revolve-y';
     }
